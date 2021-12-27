@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    index: './src',
+    index: './src/ts',
   },
   module: {
     rules: [
@@ -11,6 +11,28 @@ module.exports = {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.elm$/,
+        use: 'elm-webpack-loader',
+        exclude: [/elm-stuff/, /node_modules/]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'postcss-loader'
+          }
+        ]
       }
     ]
   },

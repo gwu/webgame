@@ -9,5 +9,6 @@
 !/.yarn/cache
 #/.pnp.*
 
+elm-stuff
 node_modules
 dist
