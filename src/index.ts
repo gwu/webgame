@@ -1,4 +1,4 @@
 import './index.css'
-import { Elm } from '../elm/Main.elm'
+import { Elm } from './Main.elm'
 
 Elm.Main.init()
