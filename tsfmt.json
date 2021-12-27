@@ -1,0 +1,4 @@
+{
+  "insertSpaceBeforeFunctionParenthesis": true,
+  "insertSpaceAfterConstructor": true
+}
