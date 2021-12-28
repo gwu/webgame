@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Url
+import Url.Parser as UP
 
 
 -- MAIN
@@ -28,13 +29,19 @@ main =
 
 type alias Model =
   { key : Nav.Key
-  , url : Url.Url
+  , route : Route
   }
+
+
+type Route
+  = Home
+  | Servers
+  | NotFound
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url, Cmd.none )
+  ( Model key (parseRoute url), Cmd.none )
 
 
 
@@ -58,9 +65,32 @@ update msg model =
           ( model, Nav.load href )
 
     UrlChanged url ->
-      ( { model | url = url }
+      ( { model | route = parseRoute url }
       , Cmd.none
       )
+
+
+parseRoute : Url.Url -> Route
+parseRoute url =
+  Maybe.withDefault NotFound (UP.parse routeParser url)
+
+
+routeParser : UP.Parser (Route -> a) a
+routeParser =
+  UP.fragment fragmentParser
+
+
+fragmentParser : Maybe String -> Route
+fragmentParser fragment =
+  case fragment of
+    Just "" ->
+      Home
+    Just "servers" ->
+      Servers
+    Nothing ->
+      Home
+    _ ->
+      NotFound
 
 
 
@@ -80,16 +110,19 @@ view : Model -> Browser.Document Msg
 view model =
   { title = "Web Game"
   , body =
-    [ span [ class "text-red-800 text-xl" ] [ text "The current URL is: " ]
-    , b [] [ text (Url.toString model.url) ]
-    , ul []
-      [ viewLink "/home"
-      , viewLink "/foo"
-      ]
+    [ div [] [ text "Hello, world!" ]
     ]
   }
 
 
-viewLink : String -> Html Msg
-viewLink path =
-  li [] [ a [ href path ] [ text path ] ]
+routeName : Route -> String
+routeName route =
+  case route of
+    Home ->
+      "Home"
+
+    Servers ->
+      "Servers"
+
+    NotFound ->
+      "Not Found"

@@ -41,7 +41,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Web Game'
+      title: 'Web Game',
+      favicon: 'src/favicon.png'
     })
   ],
   output: {
