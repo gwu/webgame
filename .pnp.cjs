@@ -40,6 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],
+            ["elm-hot-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:1.1.8"],
             ["elm-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:8.0.0"],
             ["html-webpack-plugin", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:5.5.0"],
             ["loadjs", "npm:4.2.0"],
@@ -1932,6 +1933,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/electron-to-chromium-npm-1.4.28-37738ddb1c-ac3dcd1de0.zip/node_modules/electron-to-chromium/",
           "packageDependencies": [
             ["electron-to-chromium", "npm:1.4.28"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["elm-hot", [
+        ["npm:1.1.6", {
+          "packageLocation": "./.yarn/cache/elm-hot-npm-1.1.6-3e7f60ce18-4f8012a91a.zip/node_modules/elm-hot/",
+          "packageDependencies": [
+            ["elm-hot", "npm:1.1.6"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["elm-hot-webpack-loader", [
+        ["npm:1.1.8", {
+          "packageLocation": "./.yarn/cache/elm-hot-webpack-loader-npm-1.1.8-ccbd5d353a-02d5220bd0.zip/node_modules/elm-hot-webpack-loader/",
+          "packageDependencies": [
+            ["elm-hot-webpack-loader", "npm:1.1.8"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:1.1.8", {
+          "packageLocation": "./.yarn/__virtual__/elm-hot-webpack-loader-virtual-b506fd1ea3/0/cache/elm-hot-webpack-loader-npm-1.1.8-ccbd5d353a-02d5220bd0.zip/node_modules/elm-hot-webpack-loader/",
+          "packageDependencies": [
+            ["elm-hot-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:1.1.8"],
+            ["@types/elm-webpack-loader", null],
+            ["elm-hot", "npm:1.1.6"],
+            ["elm-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:8.0.0"]
+          ],
+          "packagePeers": [
+            "@types/elm-webpack-loader",
+            "elm-webpack-loader"
           ],
           "linkType": "HARD",
         }]
@@ -5447,6 +5480,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],
+            ["elm-hot-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:1.1.8"],
             ["elm-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:8.0.0"],
             ["html-webpack-plugin", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:5.5.0"],
             ["loadjs", "npm:4.2.0"],

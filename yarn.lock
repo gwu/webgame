@@ -1549,6 +1549,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"elm-hot-webpack-loader@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "elm-hot-webpack-loader@npm:1.1.8"
+  dependencies:
+    elm-hot: ^1.1.6
+  peerDependencies:
+    elm-webpack-loader: ^7.0.1
+  checksum: 02d5220bd05d34c08802f54dbca91cac4fd6cfebd81599f9aa0fe133e2cf11c490bf44da323b1c20701064d269ac6703fda79ca8a12b0faf098c4ea50c5b849a
+  languageName: node
+  linkType: hard
+
+"elm-hot@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "elm-hot@npm:1.1.6"
+  checksum: 4f8012a91a076d927123c3b7dd4c1eef509aef21289cb7403c81236af68c701f599d0904080d839be8e56016a9de3024b265f2d863d88deaa8306ffed4c52283
+  languageName: node
+  linkType: hard
+
 "elm-webpack-loader@npm:^8.0.0":
   version: 8.0.0
   resolution: "elm-webpack-loader@npm:8.0.0"
@@ -4513,6 +4531,7 @@ __metadata:
     "@types/loadjs": ^4.0.1
     autoprefixer: ^10.4.0
     css-loader: ^6.5.1
+    elm-hot-webpack-loader: ^1.1.8
     elm-webpack-loader: ^8.0.0
     html-webpack-plugin: ^5.5.0
     loadjs: ^4.2.0

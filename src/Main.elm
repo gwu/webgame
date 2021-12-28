@@ -90,9 +90,10 @@ type CurrentUser
 
 
 type alias SignedInUser =
-    { uid : String
+    { id : String
     , email : String
     , name : Maybe String
+    , imageUrl : String
     }
 
 
@@ -137,11 +138,12 @@ update msg model =
                         (Json.Decode.nullable
                             (Json.Decode.map
                                 SignedIn
-                                (Json.Decode.map3
+                                (Json.Decode.map4
                                     SignedInUser
-                                    (Json.Decode.field "uid" Json.Decode.string)
+                                    (Json.Decode.field "id" Json.Decode.string)
                                     (Json.Decode.field "email" Json.Decode.string)
                                     (Json.Decode.field "name" (Json.Decode.maybe Json.Decode.string))
+                                    (Json.Decode.field "imageUrl" Json.Decode.string)
                                 )
                             )
                         )
@@ -224,7 +226,10 @@ view model =
                     [ div
                         [ class "h-full flex justify-center items-center" ]
                         [ div []
-                            [ div [] [ text ("Signed in as " ++ Maybe.withDefault "" signedInUser.name ++ " <" ++ signedInUser.email ++ ">") ]
+                            [ div []
+                                [ text (formatUser signedInUser)
+                                , img [ src signedInUser.imageUrl, class "w-10 h-10 rounded-full" ] []
+                                ]
                             , button
                                 [ class "bg-slate-600 px-4 p-2 rounded", Html.Events.onClick SignOut ]
                                 [ text "Sign out" ]
@@ -234,3 +239,13 @@ view model =
             )
         ]
     }
+
+
+formatUser : SignedInUser -> String
+formatUser user =
+    case user.name of
+        Nothing ->
+            "<" ++ user.email ++ ">"
+
+        Just name ->
+            name ++ " <" ++ user.email ++ ">"

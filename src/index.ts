@@ -72,9 +72,10 @@ function handleGapiLoad (): void {
             app.ports.gapiReceive.send(
               currentUser.isSignedIn()
                 ? {
-                  uid: currentUser.getBasicProfile().getId(),
+                  id: currentUser.getBasicProfile().getId(),
                   email: currentUser.getBasicProfile().getEmail(),
-                  name: currentUser.getBasicProfile().getName()
+                  name: currentUser.getBasicProfile().getName(),
+                  imageUrl: currentUser.getBasicProfile().getImageUrl()
                 }
                 : null
             )
