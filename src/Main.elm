@@ -1,11 +1,15 @@
-module Main exposing (main)
+port module Main exposing (gapiReceive, gapiSend, main)
 
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events
+import Json.Decode
+import Json.Encode
 import Url
 import Url.Parser as UP
+
 
 
 -- MAIN
@@ -13,14 +17,54 @@ import Url.Parser as UP
 
 main : Program () Model Msg
 main =
-  Browser.application
-    { init = init
-    , view = view
-    , update = update
-    , subscriptions = subscriptions
-    , onUrlChange = UrlChanged
-    , onUrlRequest = LinkClicked
-    }
+    Browser.application
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        , onUrlChange = UrlChanged
+        , onUrlRequest = UrlRequested
+        }
+
+
+
+-- PORTS
+
+
+port gapiSend : Json.Encode.Value -> Cmd msg
+
+
+port gapiReceive : (Json.Encode.Value -> msg) -> Sub msg
+
+
+type GapiMessage
+    = GapiMessageLoad
+    | GapiMessageSignIn
+    | GapiMessageSignOut
+
+
+sendGapiMessage : GapiMessage -> Cmd msg
+sendGapiMessage gapiMessage =
+    gapiSend (encodeGapiMessage gapiMessage)
+
+
+encodeGapiMessage : GapiMessage -> Json.Encode.Value
+encodeGapiMessage gapiMessage =
+    case gapiMessage of
+        GapiMessageLoad ->
+            Json.Encode.object
+                [ ( "command", Json.Encode.string "load" )
+                ]
+
+        GapiMessageSignIn ->
+            Json.Encode.object
+                [ ( "command", Json.Encode.string "signIn" )
+                ]
+
+        GapiMessageSignOut ->
+            Json.Encode.object
+                [ ( "command", Json.Encode.string "signOut" )
+                ]
 
 
 
@@ -28,20 +72,33 @@ main =
 
 
 type alias Model =
-  { key : Nav.Key
-  , route : Route
-  }
+    { key : Nav.Key
+    , route : Route
+    , currentUser : Maybe CurrentUser
+    }
 
 
 type Route
-  = Home
-  | Servers
-  | NotFound
+    = Home
+    | Servers
+    | NotFound
+
+
+type CurrentUser
+    = SignedOut
+    | SignedIn SignedInUser
+
+
+type alias SignedInUser =
+    { uid : String
+    , email : String
+    , name : Maybe String
+    }
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
-  ( Model key (parseRoute url), Cmd.none )
+init _ url key =
+    ( Model key (parseRoute url) Nothing, sendGapiMessage GapiMessageLoad )
 
 
 
@@ -49,48 +106,87 @@ init flags url key =
 
 
 type Msg
-  = LinkClicked Browser.UrlRequest
-  | UrlChanged Url.Url
+    = UrlRequested Browser.UrlRequest
+    | UrlChanged Url.Url
+    | GapiMessageReceived Json.Decode.Value
+    | SignIn
+    | SignOut
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
-    LinkClicked urlRequest ->
-      case urlRequest of
-        Browser.Internal url ->
-          ( model, Nav.pushUrl model.key (Url.toString url) )
+    case msg of
+        UrlRequested req ->
+            case req of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.key (Url.toString url) )
 
-        Browser.External href ->
-          ( model, Nav.load href )
+                Browser.External href ->
+                    ( model, Nav.load href )
 
-    UrlChanged url ->
-      ( { model | route = parseRoute url }
-      , Cmd.none
-      )
+        UrlChanged url ->
+            ( { model | route = parseRoute url }
+            , Cmd.none
+            )
+
+        GapiMessageReceived gapiMessage ->
+            let
+                gapiMessageDecoder =
+                    Json.Decode.map
+                        (Maybe.withDefault SignedOut)
+                        (Json.Decode.nullable
+                            (Json.Decode.map
+                                SignedIn
+                                (Json.Decode.map3
+                                    SignedInUser
+                                    (Json.Decode.field "uid" Json.Decode.string)
+                                    (Json.Decode.field "email" Json.Decode.string)
+                                    (Json.Decode.field "name" (Json.Decode.maybe Json.Decode.string))
+                                )
+                            )
+                        )
+
+                parseDecodingResult result =
+                    Result.toMaybe result
+            in
+            ( { model
+                | currentUser =
+                    parseDecodingResult (Json.Decode.decodeValue gapiMessageDecoder gapiMessage)
+              }
+            , Cmd.none
+            )
+
+        SignIn ->
+            ( model, sendGapiMessage GapiMessageSignIn )
+
+        SignOut ->
+            ( model, sendGapiMessage GapiMessageSignOut )
 
 
 parseRoute : Url.Url -> Route
 parseRoute url =
-  Maybe.withDefault NotFound (UP.parse routeParser url)
+    Maybe.withDefault NotFound (UP.parse routeParser url)
 
 
 routeParser : UP.Parser (Route -> a) a
 routeParser =
-  UP.fragment fragmentParser
+    UP.fragment fragmentParser
 
 
 fragmentParser : Maybe String -> Route
 fragmentParser fragment =
-  case fragment of
-    Just "" ->
-      Home
-    Just "servers" ->
-      Servers
-    Nothing ->
-      Home
-    _ ->
-      NotFound
+    case fragment of
+        Just "" ->
+            Home
+
+        Just "servers" ->
+            Servers
+
+        Nothing ->
+            Home
+
+        _ ->
+            NotFound
 
 
 
@@ -99,7 +195,7 @@ fragmentParser fragment =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-  Sub.none
+    gapiReceive GapiMessageReceived
 
 
 
@@ -108,21 +204,33 @@ subscriptions _ =
 
 view : Model -> Browser.Document Msg
 view model =
-  { title = "Web Game"
-  , body =
-    [ div [] [ text "Hello, world!" ]
-    ]
-  }
+    { title = "Web Game"
+    , body =
+        [ div
+            [ class "absolute h-full w-full bg-slate-700 overflow-auto text-slate-200" ]
+            (case model.currentUser of
+                Nothing ->
+                    [ text "Loading..." ]
 
+                Just SignedOut ->
+                    [ div
+                        [ class "h-full flex justify-center items-center" ]
+                        [ button [ class "bg-slate-600 px-4 py-2 rounded", Html.Events.onClick SignIn ]
+                            [ text "Sign in" ]
+                        ]
+                    ]
 
-routeName : Route -> String
-routeName route =
-  case route of
-    Home ->
-      "Home"
-
-    Servers ->
-      "Servers"
-
-    NotFound ->
-      "Not Found"
+                Just (SignedIn signedInUser) ->
+                    [ div
+                        [ class "h-full flex justify-center items-center" ]
+                        [ div []
+                            [ div [] [ text ("Signed in as " ++ Maybe.withDefault "" signedInUser.name ++ " <" ++ signedInUser.email ++ ">") ]
+                            , button
+                                [ class "bg-slate-600 px-4 p-2 rounded", Html.Events.onClick SignOut ]
+                                [ text "Sign out" ]
+                            ]
+                        ]
+                    ]
+            )
+        ]
+    }

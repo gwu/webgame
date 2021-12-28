@@ -188,6 +188,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/gapi.auth2@npm:^0.0.55":
+  version: 0.0.55
+  resolution: "@types/gapi.auth2@npm:0.0.55"
+  dependencies:
+    "@types/gapi": "*"
+  checksum: e6afb5d350360d0db698ac5eccf2fb62f61acdf973d63374a423ce8f270a8d113da4bd1e189f7331269336a4af2725eb0f85a049569e602b4dc11575eb109f74
+  languageName: node
+  linkType: hard
+
+"@types/gapi@npm:*, @types/gapi@npm:^0.0.41":
+  version: 0.0.41
+  resolution: "@types/gapi@npm:0.0.41"
+  checksum: 1fcb42de9ffcdc736de6c986c987c8d18471371fb876a9f3c4df29fbb51ac7a1e1c4daca4c852eae832f59072b190f1639fc75bd307d33c6db9f9fad85f7eaff
+  languageName: node
+  linkType: hard
+
 "@types/html-minifier-terser@npm:^6.0.0":
   version: 6.1.0
   resolution: "@types/html-minifier-terser@npm:6.1.0"
@@ -208,6 +224,13 @@ __metadata:
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
   checksum: 259d0e25f11a21ba5c708f7ea47196bd396e379fddb79c76f9f4f62c945879dc21657904914313ec2754e443c5018ea8372362f323f30e0792897fdb2098a705
+  languageName: node
+  linkType: hard
+
+"@types/loadjs@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@types/loadjs@npm:4.0.1"
+  checksum: ffdb5da56527ccaf229fc5b3f040ffae98f24ae402ec732415c724ba61121e2fe16f80c912ebb011189ef603520ae6df6d4aca978b3888608217c79a62522b05
   languageName: node
   linkType: hard
 
@@ -2683,6 +2706,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"loadjs@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "loadjs@npm:4.2.0"
+  checksum: 2144723f55c75260ce6781b36009c40d098d96fe06e3ec5c85ba250cf96c3a0aa37169b829e818c40bcba7c5141a8e52736fec193333bb6260ab95f9a493a2ef
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^5.0.0":
   version: 5.0.0
   resolution: "locate-path@npm:5.0.0"
@@ -4478,10 +4508,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "webgame@workspace:."
   dependencies:
+    "@types/gapi": ^0.0.41
+    "@types/gapi.auth2": ^0.0.55
+    "@types/loadjs": ^4.0.1
     autoprefixer: ^10.4.0
     css-loader: ^6.5.1
     elm-webpack-loader: ^8.0.0
     html-webpack-plugin: ^5.5.0
+    loadjs: ^4.2.0
     postcss: ^8.4.5
     postcss-loader: ^6.2.1
     style-loader: ^3.3.1

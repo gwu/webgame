@@ -8,6 +8,9 @@
     "start": "webpack serve --config webpack.dev.js"
   },
   "devDependencies": {
+    "@types/gapi": "^0.0.41",
+    "@types/gapi.auth2": "^0.0.55",
+    "@types/loadjs": "^4.0.1",
     "autoprefixer": "^10.4.0",
     "css-loader": "^6.5.1",
     "elm-webpack-loader": "^8.0.0",
@@ -22,5 +25,8 @@
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.1",
     "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "loadjs": "^4.2.0"
   }
 }

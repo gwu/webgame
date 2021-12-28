@@ -35,10 +35,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
+            ["@types/gapi", "npm:0.0.41"],
+            ["@types/gapi.auth2", "npm:0.0.55"],
+            ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],
             ["elm-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:8.0.0"],
             ["html-webpack-plugin", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:5.5.0"],
+            ["loadjs", "npm:4.2.0"],
             ["postcss", "npm:8.4.5"],
             ["postcss-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.2.1"],
             ["style-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:3.3.1"],
@@ -262,6 +266,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/gapi", [
+        ["npm:0.0.41", {
+          "packageLocation": "./.yarn/cache/@types-gapi-npm-0.0.41-a3ffbf13bb-1fcb42de9f.zip/node_modules/@types/gapi/",
+          "packageDependencies": [
+            ["@types/gapi", "npm:0.0.41"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/gapi.auth2", [
+        ["npm:0.0.55", {
+          "packageLocation": "./.yarn/cache/@types-gapi.auth2-npm-0.0.55-da66f34a10-e6afb5d350.zip/node_modules/@types/gapi.auth2/",
+          "packageDependencies": [
+            ["@types/gapi.auth2", "npm:0.0.55"],
+            ["@types/gapi", "npm:0.0.41"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/html-minifier-terser", [
         ["npm:6.1.0", {
           "packageLocation": "./.yarn/cache/@types-html-minifier-terser-npm-6.1.0-707ea07fcb-eb843f6a8d.zip/node_modules/@types/html-minifier-terser/",
@@ -286,6 +309,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.9-361918cff3-259d0e25f1.zip/node_modules/@types/json-schema/",
           "packageDependencies": [
             ["@types/json-schema", "npm:7.0.9"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/loadjs", [
+        ["npm:4.0.1", {
+          "packageLocation": "./.yarn/cache/@types-loadjs-npm-4.0.1-13507bc09b-ffdb5da565.zip/node_modules/@types/loadjs/",
+          "packageDependencies": [
+            ["@types/loadjs", "npm:4.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -3269,6 +3301,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["loadjs", [
+        ["npm:4.2.0", {
+          "packageLocation": "./.yarn/cache/loadjs-npm-4.2.0-dfba99077d-2144723f55.zip/node_modules/loadjs/",
+          "packageDependencies": [
+            ["loadjs", "npm:4.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["locate-path", [
         ["npm:5.0.0", {
           "packageLocation": "./.yarn/cache/locate-path-npm-5.0.0-46580c43e4-83e51725e6.zip/node_modules/locate-path/",
@@ -5401,10 +5442,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["webgame", "workspace:."],
+            ["@types/gapi", "npm:0.0.41"],
+            ["@types/gapi.auth2", "npm:0.0.55"],
+            ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],
             ["elm-webpack-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:8.0.0"],
             ["html-webpack-plugin", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:5.5.0"],
+            ["loadjs", "npm:4.2.0"],
             ["postcss", "npm:8.4.5"],
             ["postcss-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.2.1"],
             ["style-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:3.3.1"],
