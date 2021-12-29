@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events
+import Html.Keyed
 import Json.Decode
 import Json.Encode
 import Url
@@ -41,6 +42,8 @@ type GapiMessage
     = GapiMessageLoad
     | GapiMessageSignIn
     | GapiMessageSignOut
+    | GapiMessageLoadGameRooms
+    | GapiMessageCreateGameRoom String
 
 
 sendGapiMessage : GapiMessage -> Cmd msg
@@ -66,6 +69,17 @@ encodeGapiMessage gapiMessage =
                 [ ( "command", Json.Encode.string "signOut" )
                 ]
 
+        GapiMessageLoadGameRooms ->
+            Json.Encode.object
+                [ ( "command", Json.Encode.string "loadGameRooms" )
+                ]
+
+        GapiMessageCreateGameRoom name ->
+            Json.Encode.object
+                [ ( "command", Json.Encode.string "createGameRoom" )
+                , ( "name", Json.Encode.string name )
+                ]
+
 
 
 -- MODEL
@@ -75,13 +89,20 @@ type alias Model =
     { key : Nav.Key
     , route : Route
     , currentUser : Maybe CurrentUser
+    , gameRooms : Maybe (List GameRoom)
+    , gameRoomDialog : GameRoomDialogState
     }
 
 
 type Route
     = Home
-    | Servers
+    | Room String
     | NotFound
+
+
+type GapiData
+    = UserData CurrentUser
+    | GameRoomData (List GameRoom)
 
 
 type CurrentUser
@@ -97,9 +118,22 @@ type alias SignedInUser =
     }
 
 
+type alias GameRoom =
+    { id : String
+    , name : String
+    }
+
+
+type GameRoomDialogState
+    = GameRoomDialogClosed
+    | GameRoomDialogOpened String
+
+
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( Model key (parseRoute url) Nothing, sendGapiMessage GapiMessageLoad )
+    ( Model key (parseRoute url) Nothing Nothing GameRoomDialogClosed
+    , sendGapiMessage GapiMessageLoad
+    )
 
 
 
@@ -112,6 +146,11 @@ type Msg
     | GapiMessageReceived Json.Decode.Value
     | SignIn
     | SignOut
+    | LoadGameRooms
+    | CreateGameRoomDialogOpen
+    | CreateGameRoomDialogClose
+    | CreateGameRoomDialogNameChange String
+    | CreateGameRoom String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -132,7 +171,37 @@ update msg model =
 
         GapiMessageReceived gapiMessage ->
             let
+                decodeByType : String -> Json.Decode.Decoder GapiData
+                decodeByType t =
+                    case t of
+                        "currentUser" ->
+                            Json.Decode.map
+                                UserData
+                                (Json.Decode.field "user" currentUserMessageDecoder)
+
+                        "gameRooms" ->
+                            Json.Decode.map
+                                GameRoomData
+                                (Json.Decode.field
+                                    "rooms"
+                                    (Json.Decode.list
+                                        (Json.Decode.map2
+                                            GameRoom
+                                            (Json.Decode.field "id" Json.Decode.string)
+                                            (Json.Decode.field "name" Json.Decode.string)
+                                        )
+                                    )
+                                )
+
+                        _ ->
+                            Json.Decode.fail "Unhandled type"
+
                 gapiMessageDecoder =
+                    Json.Decode.andThen
+                        decodeByType
+                        (Json.Decode.field "type" Json.Decode.string)
+
+                currentUserMessageDecoder =
                     Json.Decode.map
                         (Maybe.withDefault SignedOut)
                         (Json.Decode.nullable
@@ -150,19 +219,57 @@ update msg model =
 
                 parseDecodingResult result =
                     Result.toMaybe result
-            in
-            ( { model
-                | currentUser =
+
+                parsedMessage =
                     parseDecodingResult (Json.Decode.decodeValue gapiMessageDecoder gapiMessage)
-              }
-            , Cmd.none
-            )
+            in
+            case parsedMessage of
+                Just (UserData currentUser) ->
+                    ( { model | currentUser = Just currentUser }
+                    , case currentUser of
+                        SignedIn _ ->
+                            sendGapiMessage GapiMessageLoadGameRooms
+
+                        _ ->
+                            Cmd.none
+                    )
+
+                Just (GameRoomData gameRooms) ->
+                    ( { model | gameRooms = Just gameRooms }
+                    , Cmd.none
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
         SignIn ->
             ( model, sendGapiMessage GapiMessageSignIn )
 
         SignOut ->
             ( model, sendGapiMessage GapiMessageSignOut )
+
+        LoadGameRooms ->
+            ( model, sendGapiMessage GapiMessageLoadGameRooms )
+
+        CreateGameRoomDialogOpen ->
+            ( { model | gameRoomDialog = GameRoomDialogOpened "" }
+            , Cmd.none
+            )
+
+        CreateGameRoomDialogClose ->
+            ( { model | gameRoomDialog = GameRoomDialogClosed }
+            , Cmd.none
+            )
+
+        CreateGameRoomDialogNameChange name ->
+            ( { model | gameRoomDialog = GameRoomDialogOpened name }
+            , Cmd.none
+            )
+
+        CreateGameRoom name ->
+            ( { model | gameRoomDialog = GameRoomDialogClosed }
+            , sendGapiMessage (GapiMessageCreateGameRoom name)
+            )
 
 
 parseRoute : Url.Url -> Route
@@ -181,14 +288,16 @@ fragmentParser fragment =
         Just "" ->
             Home
 
-        Just "servers" ->
-            Servers
+        Just path ->
+            case String.split "/" path of
+                [ "room", roomId ] ->
+                    Room roomId
+
+                _ ->
+                    NotFound
 
         Nothing ->
             Home
-
-        _ ->
-            NotFound
 
 
 
@@ -233,6 +342,15 @@ view model =
                             , button
                                 [ class "bg-slate-600 px-4 p-2 rounded", Html.Events.onClick SignOut ]
                                 [ text "Sign out" ]
+                            , Html.Keyed.ul
+                                []
+                                (List.map viewGameRoom (Maybe.withDefault [] model.gameRooms))
+                            , button
+                                [ class "bg-purple-600 px-4 p-2 rounded"
+                                , Html.Events.onClick CreateGameRoomDialogOpen
+                                ]
+                                [ text "Create a room" ]
+                            , viewCreateRoomDialog model.gameRoomDialog
                             ]
                         ]
                     ]
@@ -249,3 +367,36 @@ formatUser user =
 
         Just name ->
             name ++ " <" ++ user.email ++ ">"
+
+
+viewGameRoom : GameRoom -> ( String, Html Msg )
+viewGameRoom gameRoom =
+    ( gameRoom.id
+    , li []
+        [ a [ href ("#room/" ++ gameRoom.id) ] [ text gameRoom.name ] ]
+    )
+
+
+viewCreateRoomDialog : GameRoomDialogState -> Html Msg
+viewCreateRoomDialog dialog =
+    case dialog of
+        GameRoomDialogClosed ->
+            text ""
+
+        GameRoomDialogOpened roomName ->
+            div
+                [ class "absolute top-0 left-0 w-full h-full bg-slate-600" ]
+                [ div [] [ text "Create a room" ]
+                , input
+                    [ placeholder "Room name"
+                    , value roomName
+                    , Html.Events.onInput CreateGameRoomDialogNameChange
+                    ]
+                    []
+                , button
+                    [ class "bg-slate-500 px-4 py-2 rounded", Html.Events.onClick CreateGameRoomDialogClose ]
+                    [ text "Cancel" ]
+                , button
+                    [ class "bg-slate-500 px-4 py-2 rounded", Html.Events.onClick (CreateGameRoom roomName) ]
+                    [ text "Create" ]
+                ]

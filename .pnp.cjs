@@ -37,6 +37,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/gapi", "npm:0.0.41"],
             ["@types/gapi.auth2", "npm:0.0.55"],
+            ["@types/gapi.client.drive", "npm:3.0.13"],
+            ["@types/gapi.client.sheets", "npm:4.0.20201029"],
             ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],
@@ -103,6 +105,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@gar-promisify-npm-1.1.2-2343f94380-d05081e088.zip/node_modules/@gar/promisify/",
           "packageDependencies": [
             ["@gar/promisify", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@maxim_mazurok/gapi.client.drive", [
+        ["npm:3.0.20211213", {
+          "packageLocation": "./.yarn/cache/@maxim_mazurok-gapi.client.drive-npm-3.0.20211213-693341450e-32e3f53401.zip/node_modules/@maxim_mazurok/gapi.client.drive/",
+          "packageDependencies": [
+            ["@maxim_mazurok/gapi.client.drive", "npm:3.0.20211213"],
+            ["@types/gapi.client", "npm:1.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@maxim_mazurok/gapi.client.sheets", [
+        ["npm:4.0.20211214", {
+          "packageLocation": "./.yarn/cache/@maxim_mazurok-gapi.client.sheets-npm-4.0.20211214-95b6d62c88-7696b9ef92.zip/node_modules/@maxim_mazurok/gapi.client.sheets/",
+          "packageDependencies": [
+            ["@maxim_mazurok/gapi.client.sheets", "npm:4.0.20211214"],
+            ["@types/gapi.client", "npm:1.0.5"]
           ],
           "linkType": "HARD",
         }]
@@ -282,6 +304,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/gapi.auth2", "npm:0.0.55"],
             ["@types/gapi", "npm:0.0.41"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/gapi.client", [
+        ["npm:1.0.5", {
+          "packageLocation": "./.yarn/cache/@types-gapi.client-npm-1.0.5-a3f617361d-2e85b381b4.zip/node_modules/@types/gapi.client/",
+          "packageDependencies": [
+            ["@types/gapi.client", "npm:1.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/gapi.client.drive", [
+        ["npm:3.0.13", {
+          "packageLocation": "./.yarn/cache/@types-gapi.client.drive-npm-3.0.13-d6d9aba2a0-8bf8c347fe.zip/node_modules/@types/gapi.client.drive/",
+          "packageDependencies": [
+            ["@types/gapi.client.drive", "npm:3.0.13"],
+            ["@maxim_mazurok/gapi.client.drive", "npm:3.0.20211213"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/gapi.client.sheets", [
+        ["npm:4.0.20201029", {
+          "packageLocation": "./.yarn/cache/@types-gapi.client.sheets-npm-4.0.20201029-b9385deb6d-a23f0b9021.zip/node_modules/@types/gapi.client.sheets/",
+          "packageDependencies": [
+            ["@types/gapi.client.sheets", "npm:4.0.20201029"],
+            ["@maxim_mazurok/gapi.client.sheets", "npm:4.0.20211214"]
           ],
           "linkType": "HARD",
         }]
@@ -5477,6 +5528,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webgame", "workspace:."],
             ["@types/gapi", "npm:0.0.41"],
             ["@types/gapi.auth2", "npm:0.0.55"],
+            ["@types/gapi.client.drive", "npm:3.0.13"],
+            ["@types/gapi.client.sheets", "npm:4.0.20201029"],
             ["@types/loadjs", "npm:4.0.1"],
             ["autoprefixer", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:10.4.0"],
             ["css-loader", "virtual:f9043f69831bc68199b8559b65b9bc1a62720e9da5ce7ddee513b28399dc20685b25a5b79380c353932661c94c1d8ed705eb495be6c69a8dc2d34185ce2d21aa#npm:6.5.1"],

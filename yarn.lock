@@ -46,6 +46,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@maxim_mazurok/gapi.client.drive@npm:latest":
+  version: 3.0.20211213
+  resolution: "@maxim_mazurok/gapi.client.drive@npm:3.0.20211213"
+  dependencies:
+    "@types/gapi.client": "*"
+  checksum: 32e3f53401252c712d45108ad017e05de6bf08ee7dfb18aa87d8a0affae8de7fdd628c8da92fc064796d72b2e14e8beadb9fe7c9297541f65bcb39cceaabdd8b
+  languageName: node
+  linkType: hard
+
+"@maxim_mazurok/gapi.client.sheets@npm:latest":
+  version: 4.0.20211214
+  resolution: "@maxim_mazurok/gapi.client.sheets@npm:4.0.20211214"
+  dependencies:
+    "@types/gapi.client": "*"
+  checksum: 7696b9ef92e0e4475ab0871d7fa15c11b74cad1b561b0d67af4c3d1729a95cff45fffe02e8a5c9f8e82fa82117eda2aef39278fe6961639ad54dff7cc9269452
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -194,6 +212,31 @@ __metadata:
   dependencies:
     "@types/gapi": "*"
   checksum: e6afb5d350360d0db698ac5eccf2fb62f61acdf973d63374a423ce8f270a8d113da4bd1e189f7331269336a4af2725eb0f85a049569e602b4dc11575eb109f74
+  languageName: node
+  linkType: hard
+
+"@types/gapi.client.drive@npm:^3.0.13":
+  version: 3.0.13
+  resolution: "@types/gapi.client.drive@npm:3.0.13"
+  dependencies:
+    "@maxim_mazurok/gapi.client.drive": latest
+  checksum: 8bf8c347fe49d2bff83aa7d7245a76eb64520ea5ec9efa2db16202ec96e2008180c7f0364204553c6efa56e83f740dd80eb639bbc4e95e2557f2d42d56fe2945
+  languageName: node
+  linkType: hard
+
+"@types/gapi.client.sheets@npm:^4.0.20201029":
+  version: 4.0.20201029
+  resolution: "@types/gapi.client.sheets@npm:4.0.20201029"
+  dependencies:
+    "@maxim_mazurok/gapi.client.sheets": latest
+  checksum: a23f0b9021c53f15e34083acb85acf3e29b3ff9c256c0476786a6db7c877f7e8dc34cd3a694d91a9af142f3da47852cc376b5666dbf4fcf68414a70df964a295
+  languageName: node
+  linkType: hard
+
+"@types/gapi.client@npm:*":
+  version: 1.0.5
+  resolution: "@types/gapi.client@npm:1.0.5"
+  checksum: 2e85b381b45e290de13052e108e4281c0966065db085c3b4294cd801c9425f8ad37b38f76f6a1f404a963fa326564bed953db3352c933c4f417fa209ff4d3c0c
   languageName: node
   linkType: hard
 
@@ -4528,6 +4571,8 @@ __metadata:
   dependencies:
     "@types/gapi": ^0.0.41
     "@types/gapi.auth2": ^0.0.55
+    "@types/gapi.client.drive": ^3.0.13
+    "@types/gapi.client.sheets": ^4.0.20201029
     "@types/loadjs": ^4.0.1
     autoprefixer: ^10.4.0
     css-loader: ^6.5.1
