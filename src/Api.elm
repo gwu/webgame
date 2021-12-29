@@ -1,4 +1,4 @@
-module Api exposing (Room, User, createRoom, init, loadRooms, signIn, signOut)
+module Api exposing (Room, User, createRoom, init, loadRooms, shareRoom, signIn, signOut)
 
 import Json.Encode as Encode
 
@@ -21,7 +21,7 @@ init : (Encode.Value -> a) -> a
 init sendPort =
     sendPort
         (Encode.object
-            [ ( "command", Encode.string "load" ) ]
+            [ ( "command", Encode.string "init" ) ]
         )
 
 
@@ -45,7 +45,7 @@ loadRooms : (Encode.Value -> a) -> a
 loadRooms sendPort =
     sendPort
         (Encode.object
-            [ ( "command", Encode.string "loadGameRooms" ) ]
+            [ ( "command", Encode.string "loadRooms" ) ]
         )
 
 
@@ -53,7 +53,18 @@ createRoom : String -> (Encode.Value -> a) -> a
 createRoom name sendPort =
     sendPort
         (Encode.object
-            [ ( "command", Encode.string "createGameRoom" )
+            [ ( "command", Encode.string "createRoom" )
             , ( "name", Encode.string name )
+            ]
+        )
+
+
+shareRoom : String -> String -> (Encode.Value -> a) -> a
+shareRoom roomId email sendPort =
+    sendPort
+        (Encode.object
+            [ ( "command", Encode.string "shareRoom" )
+            , ( "room", Encode.string roomId )
+            , ( "email", Encode.string email )
             ]
         )

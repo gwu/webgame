@@ -1,4 +1,4 @@
-port module Main exposing (gapiReceive, gapiSend, main)
+port module Main exposing (apiPort, dataPort, main)
 
 import Api
 import Browser
@@ -33,10 +33,10 @@ main =
 -- PORTS
 
 
-port gapiSend : Json.Encode.Value -> Cmd msg
+port apiPort : Json.Encode.Value -> Cmd msg
 
 
-port gapiReceive : (Json.Encode.Value -> msg) -> Sub msg
+port dataPort : (Json.Encode.Value -> msg) -> Sub msg
 
 
 
@@ -76,7 +76,7 @@ type GameRoomDialogState
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     ( Model key (parseRoute url) Nothing Nothing GameRoomDialogClosed
-    , Api.init gapiSend
+    , Api.init apiPort
     )
 
 
@@ -123,7 +123,7 @@ update msg model =
                                 UserData
                                 (Json.Decode.field "user" currentUserMessageDecoder)
 
-                        "gameRooms" ->
+                        "rooms" ->
                             Json.Decode.map
                                 GameRoomData
                                 (Json.Decode.field
@@ -172,7 +172,7 @@ update msg model =
                     ( { model | currentUser = Just currentUser }
                     , case currentUser of
                         SignedIn _ ->
-                            Api.loadRooms gapiSend
+                            Api.loadRooms apiPort
 
                         _ ->
                             Cmd.none
@@ -187,13 +187,13 @@ update msg model =
                     ( model, Cmd.none )
 
         SignIn ->
-            ( model, Api.signIn gapiSend )
+            ( model, Api.signIn apiPort )
 
         SignOut ->
-            ( model, Api.signOut gapiSend )
+            ( model, Api.signOut apiPort )
 
         LoadGameRooms ->
-            ( model, Api.loadRooms gapiSend )
+            ( model, Api.loadRooms apiPort )
 
         CreateGameRoomDialogOpen ->
             ( { model | gameRoomDialog = GameRoomDialogOpened "" }
@@ -212,7 +212,7 @@ update msg model =
 
         CreateGameRoom name ->
             ( { model | gameRoomDialog = GameRoomDialogClosed }
-            , Api.createRoom name gapiSend
+            , Api.createRoom name apiPort
             )
 
 
@@ -250,7 +250,7 @@ fragmentParser fragment =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    gapiReceive GapiMessageReceived
+    dataPort GapiMessageReceived
 
 
 

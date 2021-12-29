@@ -1,4 +1,5 @@
 {
   "insertSpaceBeforeFunctionParenthesis": true,
-  "insertSpaceAfterConstructor": true
+  "insertSpaceAfterConstructor": true,
+  "indentSize": 2
 }
