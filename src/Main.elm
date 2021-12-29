@@ -1,5 +1,6 @@
 port module Main exposing (gapiReceive, gapiSend, main)
 
+import Api
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
@@ -89,7 +90,7 @@ type alias Model =
     { key : Nav.Key
     , route : Route
     , currentUser : Maybe CurrentUser
-    , gameRooms : Maybe (List GameRoom)
+    , gameRooms : Maybe (List Api.Room)
     , gameRoomDialog : GameRoomDialogState
     }
 
@@ -102,26 +103,12 @@ type Route
 
 type GapiData
     = UserData CurrentUser
-    | GameRoomData (List GameRoom)
+    | GameRoomData (List Api.Room)
 
 
 type CurrentUser
     = SignedOut
-    | SignedIn SignedInUser
-
-
-type alias SignedInUser =
-    { id : String
-    , email : String
-    , name : Maybe String
-    , imageUrl : String
-    }
-
-
-type alias GameRoom =
-    { id : String
-    , name : String
-    }
+    | SignedIn Api.User
 
 
 type GameRoomDialogState
@@ -186,7 +173,7 @@ update msg model =
                                     "rooms"
                                     (Json.Decode.list
                                         (Json.Decode.map2
-                                            GameRoom
+                                            Api.Room
                                             (Json.Decode.field "id" Json.Decode.string)
                                             (Json.Decode.field "name" Json.Decode.string)
                                         )
@@ -208,10 +195,10 @@ update msg model =
                             (Json.Decode.map
                                 SignedIn
                                 (Json.Decode.map4
-                                    SignedInUser
+                                    Api.User
                                     (Json.Decode.field "id" Json.Decode.string)
                                     (Json.Decode.field "email" Json.Decode.string)
-                                    (Json.Decode.field "name" (Json.Decode.maybe Json.Decode.string))
+                                    (Json.Decode.field "name" Json.Decode.string)
                                     (Json.Decode.field "imageUrl" Json.Decode.string)
                                 )
                             )
@@ -359,17 +346,12 @@ view model =
     }
 
 
-formatUser : SignedInUser -> String
+formatUser : Api.User -> String
 formatUser user =
-    case user.name of
-        Nothing ->
-            "<" ++ user.email ++ ">"
-
-        Just name ->
-            name ++ " <" ++ user.email ++ ">"
+    user.name ++ " <" ++ user.email ++ ">"
 
 
-viewGameRoom : GameRoom -> ( String, Html Msg )
+viewGameRoom : Api.Room -> ( String, Html Msg )
 viewGameRoom gameRoom =
     ( gameRoom.id
     , li []
