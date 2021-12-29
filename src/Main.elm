@@ -270,7 +270,8 @@ view model =
                 Just SignedOut ->
                     [ div
                         [ class "h-full flex justify-center items-center" ]
-                        [ button [ class "bg-slate-600 px-4 py-2 rounded", Html.Events.onClick SignIn ]
+                        [ button
+                            [ class "bg-slate-600 px-4 py-2 rounded", Html.Events.onClick SignIn ]
                             [ text "Sign in" ]
                         ]
                     ]
@@ -281,10 +282,14 @@ view model =
                         [ div []
                             [ div []
                                 [ text (formatUser signedInUser)
-                                , img [ src signedInUser.imageUrl, class "w-10 h-10 rounded-full" ] []
+                                , img
+                                    [ src signedInUser.imageUrl, class "w-10 h-10 rounded-full" ]
+                                    []
                                 ]
                             , button
-                                [ class "bg-slate-600 px-4 p-2 rounded", Html.Events.onClick SignOut ]
+                                [ class "bg-slate-600 px-4 p-2 rounded"
+                                , Html.Events.onClick SignOut
+                                ]
                                 [ text "Sign out" ]
                             , Html.Keyed.ul
                                 []
@@ -333,9 +338,13 @@ viewCreateRoomDialog dialog =
                     ]
                     []
                 , button
-                    [ class "bg-slate-500 px-4 py-2 rounded", Html.Events.onClick CreateGameRoomDialogClose ]
+                    [ class "bg-slate-500 px-4 py-2 rounded"
+                    , Html.Events.onClick CreateGameRoomDialogClose
+                    ]
                     [ text "Cancel" ]
                 , button
-                    [ class "bg-slate-500 px-4 py-2 rounded", Html.Events.onClick (CreateGameRoom roomName) ]
+                    [ class "bg-slate-500 px-4 py-2 rounded"
+                    , Html.Events.onClick (CreateGameRoom roomName)
+                    ]
                     [ text "Create" ]
                 ]
