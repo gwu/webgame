@@ -4,11 +4,11 @@ import loadjs from 'loadjs'
 
 export type Method = (
   Init |
-    SignIn |
-    SignOut |
-    LoadRooms |
-    CreateRoom |
-    ShareRoom
+  SignIn |
+  SignOut |
+  LoadRooms |
+  CreateRoom |
+  ShareRoom
 )
 export function isMethod (obj: any): obj is Method {
   return isInit(obj) ||
@@ -136,31 +136,36 @@ async function init (channel: Channel): Promise<void> {
     ]
     const scope = scopes.join(' ')
 
-    gapi.load('client:auth2', async () => {
-      await gapi.client.init({
-        apiKey,
-        discoveryDocs,
-        clientId,
-        scope
-      })
+    gapi.load('client:auth2', () => {
+      async function init (): Promise<void> {
+        await gapi.client.init({
+          apiKey,
+          discoveryDocs,
+          clientId,
+          scope
+        })
 
-      const authInstance = gapi.auth2.getAuthInstance()
-      authInstance.currentUser.listen(onCurrentUserChanged)
-      onCurrentUserChanged(authInstance.currentUser.get())
-      function onCurrentUserChanged (currentUser: gapi.auth2.GoogleUser): void {
-        const data: CurrentUser = {
-          type: 'currentUser',
-          user: currentUser.isSignedIn()
-            ? {
-              id: currentUser.getBasicProfile().getId(),
-              email: currentUser.getBasicProfile().getEmail(),
-              name: currentUser.getBasicProfile().getName(),
-              imageUrl: currentUser.getBasicProfile().getImageUrl()
-            }
-            : null
+        const authInstance = gapi.auth2.getAuthInstance()
+        authInstance.currentUser.listen(onCurrentUserChanged)
+        onCurrentUserChanged(authInstance.currentUser.get())
+        function onCurrentUserChanged (currentUser: gapi.auth2.GoogleUser): void {
+          const data: CurrentUser = {
+            type: 'currentUser',
+            user: currentUser.isSignedIn()
+              ? {
+                  id: currentUser.getBasicProfile().getId(),
+                  email: currentUser.getBasicProfile().getEmail(),
+                  name: currentUser.getBasicProfile().getName(),
+                  imageUrl: currentUser.getBasicProfile().getImageUrl()
+                }
+              : null
+          }
+          channel(data)
         }
-        channel(data)
       }
+
+      init()
+        .catch((err) => console.log(err))
     })
   })
 }
@@ -176,23 +181,20 @@ async function signOut (): Promise<void> {
 async function loadRooms (channel: Channel): Promise<void> {
   const propKey = 'type'
   const propValue = 'room'
-  gapi.client.drive.files
-    .list({
-      spaces: 'drive',
-      q: `appProperties has { key='${propKey}' and value='${propValue}' }`
-    })
-    .then((fileList) => {
-      const files = fileList.result.files ?? []
-      const rooms: Room[] = files
-        .map((f) => f.id !== undefined && f.name !== undefined ? [f.id, f.name] : false)
-        .filter((f): f is [string, string] => f !== false)
-        .map(([id, name]): Room => ({ id, name }))
-      const data: Data = {
-        type: 'rooms',
-        rooms
-      }
-      channel(data)
-    })
+  const fileList = await gapi.client.drive.files.list({
+    spaces: 'drive',
+    q: `appProperties has { key='${propKey}' and value='${propValue}' }`
+  })
+  const files = fileList.result.files ?? []
+  const rooms: Room[] = files
+    .map((f) => f.id !== undefined && f.name !== undefined ? [f.id, f.name] : false)
+    .filter((f): f is [string, string] => f !== false)
+    .map(([id, name]): Room => ({ id, name }))
+  const data: Data = {
+    type: 'rooms',
+    rooms
+  }
+  channel(data)
 }
 
 async function createRoom (name: string, channel: Channel): Promise<void> {

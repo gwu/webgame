@@ -9,5 +9,7 @@ app.ports.apiPort.subscribe((method: any) => {
     throw new Error(`Expected method but found ${JSON.stringify(method)}`)
   }
 
-  Api.call(method, app.ports.dataPort.send)
+  Api
+    .call(method, app.ports.dataPort.send)
+    .catch((err) => console.log(err))
 })
