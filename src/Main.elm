@@ -39,49 +39,6 @@ port gapiSend : Json.Encode.Value -> Cmd msg
 port gapiReceive : (Json.Encode.Value -> msg) -> Sub msg
 
 
-type GapiMessage
-    = GapiMessageLoad
-    | GapiMessageSignIn
-    | GapiMessageSignOut
-    | GapiMessageLoadGameRooms
-    | GapiMessageCreateGameRoom String
-
-
-sendGapiMessage : GapiMessage -> Cmd msg
-sendGapiMessage gapiMessage =
-    gapiSend (encodeGapiMessage gapiMessage)
-
-
-encodeGapiMessage : GapiMessage -> Json.Encode.Value
-encodeGapiMessage gapiMessage =
-    case gapiMessage of
-        GapiMessageLoad ->
-            Json.Encode.object
-                [ ( "command", Json.Encode.string "load" )
-                ]
-
-        GapiMessageSignIn ->
-            Json.Encode.object
-                [ ( "command", Json.Encode.string "signIn" )
-                ]
-
-        GapiMessageSignOut ->
-            Json.Encode.object
-                [ ( "command", Json.Encode.string "signOut" )
-                ]
-
-        GapiMessageLoadGameRooms ->
-            Json.Encode.object
-                [ ( "command", Json.Encode.string "loadGameRooms" )
-                ]
-
-        GapiMessageCreateGameRoom name ->
-            Json.Encode.object
-                [ ( "command", Json.Encode.string "createGameRoom" )
-                , ( "name", Json.Encode.string name )
-                ]
-
-
 
 -- MODEL
 
@@ -119,7 +76,7 @@ type GameRoomDialogState
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     ( Model key (parseRoute url) Nothing Nothing GameRoomDialogClosed
-    , sendGapiMessage GapiMessageLoad
+    , Api.init gapiSend
     )
 
 
@@ -215,7 +172,7 @@ update msg model =
                     ( { model | currentUser = Just currentUser }
                     , case currentUser of
                         SignedIn _ ->
-                            sendGapiMessage GapiMessageLoadGameRooms
+                            Api.loadRooms gapiSend
 
                         _ ->
                             Cmd.none
@@ -230,13 +187,13 @@ update msg model =
                     ( model, Cmd.none )
 
         SignIn ->
-            ( model, sendGapiMessage GapiMessageSignIn )
+            ( model, Api.signIn gapiSend )
 
         SignOut ->
-            ( model, sendGapiMessage GapiMessageSignOut )
+            ( model, Api.signOut gapiSend )
 
         LoadGameRooms ->
-            ( model, sendGapiMessage GapiMessageLoadGameRooms )
+            ( model, Api.loadRooms gapiSend )
 
         CreateGameRoomDialogOpen ->
             ( { model | gameRoomDialog = GameRoomDialogOpened "" }
@@ -255,7 +212,7 @@ update msg model =
 
         CreateGameRoom name ->
             ( { model | gameRoomDialog = GameRoomDialogClosed }
-            , sendGapiMessage (GapiMessageCreateGameRoom name)
+            , Api.createRoom name gapiSend
             )
 
 
